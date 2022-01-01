@@ -1,0 +1,74 @@
+All Launch Site Names
+
+SELECT distinct LAUNCH_SITE FROM DENEME;
+
+
+Launch Site Names Begin with 'CCA'
+
+SELECT * FROM DENEME
+WHERE LAUNCH_SITE LIKE 'CCA%' LIMIT 5;
+
+
+Total Payload Mass
+
+SELECT sum(PAYLOAD_MASS__KG_) FROM DENEME
+WHERE CUSTOMER LIKE '%NASA%';
+
+
+Average Payload Mass by F9 v1.1
+
+SELECT AVG(PAYLOAD_MASS__KG_) FROM DENEME
+WHERE BOOSTER_VERSION LIKE 'F9 v1.1%';
+
+
+First Successful Ground Landing Date
+
+SELECT min(DATE) FROM DENEME
+WHERE LANDING__OUTCOME='Success (ground pad)';
+
+
+Successful Drone Ship Landing with Payload between 4000 and 6000
+
+
+SELECT distinct(BOOSTER_VERSION) FROM DENEME
+WHERE LANDING__OUTCOME='Success (drone ship)'
+AND PAYLOAD_MASS__KG_>4000 AND PAYLOAD_MASS__KG_<6000;
+
+
+Total Number of Successful and Failure Mission Outcomes
+
+
+SELECT CASE WHEN MISSION_OUTCOME LIKE '%Success%' THEN 'Success'
+WHEN MISSION_OUTCOME LIKE '%Failure%' THEN 'Failure'
+ELSE 'Other' END  AS Success_Failure_Group,
+
+count(*) AS Total_Number
+FROM DENEME
+
+GROUP BY CASE WHEN MISSION_OUTCOME LIKE '%Success%' THEN 'Success'
+WHEN MISSION_OUTCOME LIKE '%Failure%' THEN 'Failure'
+ELSE 'Other' END;
+
+
+Boosters Carried Maximum Payload
+
+SELECT distinct(BOOSTER_VERSION) FROM DENEME
+WHERE PAYLOAD_MASS__KG_=(SELECT max(PAYLOAD_MASS__KG_) FROM DENEME);
+
+2015 Launch Records
+
+SELECT BOOSTER_VERSION, LAUNCH_SITE, DATE FROM DENEME
+WHERE LANDING__OUTCOME='Failure (drone ship)'
+and DATE LIKE '2015%'
+
+
+Rank Landing Outcomes Between 2010-06-04 and 2017-03-20
+
+SELECT LANDING__OUTCOME, count(*) AS Number_Outcome
+FROM DENEME
+WHERE DATE BETWEEN '2010-06-04' and '2017-03-20'
+GROUP BY LANDING__OUTCOME
+ORDER BY Number_Outcome DESC;
+
+
+
